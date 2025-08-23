@@ -11,6 +11,26 @@ cpfInput.addEventListener('input', () => {
   cpfInput.value = value
 })
 
+// Checagem de CPF duplicado ao perder o foco
+cpfInput.addEventListener('blur', async () => {
+  const cpf = cpfInput.value.replace(/\D/g, '')
+  if (validarCPF(cpf)) {
+    try {
+      const resposta = await fetch(`${API_BASE_URL}/cpf?cpf=${cpf}`)
+      const existe = await resposta.json()
+      if (existe.cadastrado) {
+        cpfInput.classList.add('is-invalid')
+        mostrarMensagem('CPF já cadastrado.', 'danger')
+      } else {
+        cpfInput.classList.remove('is-invalid')
+        limparMensagem()
+      }
+    } catch (erro) {
+      // Ignora erro de conexão
+    }
+  }
+})
+
 // Validação completa do CPF (com dígitos verificadores)
 function validarCPF(cpf) {
   cpf = cpf.replace(/[^\d]+/g, '')
@@ -117,6 +137,21 @@ document.getElementById('form-presenca').addEventListener('submit', async functi
     emailInput.classList.add('is-invalid')
     mostrarMensagem('E-mail inválido. Verifique e tente novamente.', 'danger')
     temErro = true
+  }
+
+  // Checagem extra de CPF duplicado antes de enviar
+  if (!temErro && validarCPF(cpf)) {
+    try {
+      const resposta = await fetch(`${API_BASE_URL}/cpf?cpf=${cpf.replace(/\D/g, '')}`)
+      const existe = await resposta.json()
+      if (existe.cadastrado) {
+        cpfInput.classList.add('is-invalid')
+        mostrarMensagem('CPF já cadastrado.', 'danger')
+        temErro = true
+      }
+    } catch (erro) {
+      // Ignora erro de conexão
+    }
   }
 
   if (temErro) return
