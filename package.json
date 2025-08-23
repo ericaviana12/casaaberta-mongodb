@@ -1,8 +1,41 @@
 {
+  "name": "casaaberta-mongodb",
+  "version": "1.0.0",
+  "description": "Sistema de controle de presenças e feedbacks para o evento Casa Aberta, realizado no Senac Tatuapé",
+  "homepage": "https://github.com/ericaviana12/casaaberta-mongodb#readme",
+  "bugs": {
+    "url": "https://github.com/ericaviana12/casaaberta-mongodb/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ericaviana12/casaaberta-mongodb.git"
+  },
+  "license": "MIT",
+  "author": "Erica Viana",
+  "contributors": [
+    {
+      "name": "Bruno Dorea"
+    },
+    {
+      "name": "Elen Grecco"
+    },
+    {
+      "name": "Gabriel Coutinho"
+    },
+    {
+      "name": "Gustavo Nunes"
+    }
+  ],
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
     "mongodb": "^6.18.0"
-  }
+  },
+  "devDependencies": {}
 }
