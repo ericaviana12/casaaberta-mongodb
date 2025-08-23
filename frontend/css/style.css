@@ -53,3 +53,47 @@
   font-weight: 700;
   width: 100%;
 }
+
+@media (max-width: 600px) {
+  body {
+    padding: 1rem;
+  }
+  h1, h2, h3 {
+    font-size: 1.3rem !important;
+  }
+  .agradecimento-box {
+    padding: 24px 10px;
+  }
+  .agradecimento-box h1 {
+    font-size: 1.6rem !important;
+  }
+  .agradecimento-box p {
+    font-size: 1rem !important;
+  }
+  .agradecimento-box .btn {
+    font-size: 1rem !important;
+    padding: 12px 10px;
+    max-width: 100%;
+  }
+  .card h3 {
+    font-size: 1.1rem !important;
+  }
+  .logo-casa-aberta {
+    max-width: 100px !important;
+  }
+  button[type="submit"],
+  .btn,
+  .btn-primary {
+    font-size: 1rem !important;
+    padding: 10px !important;
+  }
+  input,
+  select,
+  textarea {
+    font-size: 1rem !important;
+  }
+  footer {
+    font-size: 0.8rem !important;
+    padding-top: 0.5rem;
+  }
+}
