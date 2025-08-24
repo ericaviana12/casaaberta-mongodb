@@ -6,20 +6,6 @@ O projeto utiliza **Node.js + Express** com **MongoDB Atlas** e está deployado 
 
 ---
 
-## 📌 Índice
-- [Sobre](#sobre)
-- [Tecnologias](#tecnologias)
-- [Equipe](#equipe)
-- [Pré-requisitos](#pré-requisitos)
-- [Instalação](#instalação)
-- [Deploy](#deploy)
-- [Uso](#uso)
-- [Boas Práticas](#boas-práticas)
-- [Contribuição](#contribuição)
-- [Licença](#licença)
-
----
-
 ## 📖 Sobre
 
 Este sistema foi criado para o evento **Casa Aberta**, realizado no Senac Tatuapé, permitindo:
@@ -65,14 +51,14 @@ Antes de rodar localmente, você precisa ter instalado:
 ## ⚙️ Instalação
 
 Clone este repositório:
-git clone https://github.com/ericaviana12/casaaberta-mongodb.git
+git clone https://github.com/ericaviana12/casaaberta-mongodb.git   
 cd casaaberta-mongodb
 
 Instale as dependências:
 npm install
 
 Configure as variáveis de ambiente criando um arquivo .env na raiz:
-MONGO_URI=sua_string_de_conexao_do_mongodb
+MONGO_URI=sua_string_de_conexao_do_mongodb   
 PORT=3000
 
 Execute o servidor localmente:
@@ -80,37 +66,36 @@ node server.js
 
 ## 🚀 Deploy
 
-O sistema está hospedado em:
-Frontend & Backend: Vercel
-Banco de dados: MongoDB Atlas
-Cada push no repositório dispara automaticamente o build no Vercel.
+O sistema está hospedado em:   
+Frontend & Backend: Vercel   
+Banco de dados: MongoDB Atlas   
+Cada push no repositório dispara automaticamente o build no Vercel.   
 
 ## 💻 Uso
 
-Acesse o link do deploy no Vercel.
-Preencha o formulário para registrar presença.
-Os dados são salvos diretamente no MongoDB Atlas.
-É possível também enviar feedbacks, exibidos em tempo real.
+Acesse o link do deploy no Vercel.   
+Preencha o formulário para registrar presença.   
+Os dados são salvos diretamente no MongoDB Atlas.   
+É possível também enviar feedbacks, exibidos em tempo real.   
 
 # ✅ Boas Práticas
 
-Nunca versionar o arquivo .env
-Usar variáveis de ambiente para credenciais sensíveis
-Testar endpoints no Postman/Insomnia antes do deploy
-Validar entradas do usuário no backend
-Utilizar branches (feature/..., fix/...) para novas implementações
+Nunca versionar o arquivo .env   
+Usar variáveis de ambiente para credenciais sensíveis   
+Testar endpoints no Postman/Insomnia antes do deploy   
+Validar entradas do usuário no backend   
+Utilizar branches (feature/..., fix/...) para novas implementações   
 
 # 🤝 Contribuição
 
 Contribuições são bem-vindas!
 
-Para colaborar:
-Faça um fork do projeto.
-Crie uma branch: git checkout -b feature/nova-funcionalidade
-Commit suas mudanças: git commit -m 'Adiciona nova funcionalidade'
-Envie um push para a branch: git push origin feature/nova-funcionalidade
-
-Abra um Pull Request.
+Para colaborar:   
+Faça um fork do projeto.   
+Crie uma branch: git checkout -b feature/nova-funcionalidade   
+Commit suas mudanças: git commit -m 'Adiciona nova funcionalidade'   
+Envie um push para a branch: git push origin feature/nova-funcionalidade   
+Abra um Pull Request.   
 
 # 📄 Licença
 
