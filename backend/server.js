@@ -135,7 +135,6 @@ app.get('/api/estatisticas', async (req, res) => {
 // ===== Socket.io conexão =====
 io.on('connection', (socket) => {
   console.log('Dashboard conectado:', socket.id)
-  // Você pode emitir estatísticas iniciais aqui se quiser
 })
 
 const PORT = process.env.PORT || 3000
