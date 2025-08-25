@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Casa Aberta Senac</title>
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/background.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <h1>📊 Dashboard - Casa Aberta</h1>
+
+        <div class="cards-row">
+            <div class="card">
+                <h2>Total de Participantes</h2>
+                <p id="totalParticipantes">0</p>
+            </div>
+            <div class="card">
+                <h2>Total de Feedbacks</h2>
+                <p id="totalFeedbacks">0</p>
+            </div>
+            <div class="card">
+                <h2>Média de Estrelas</h2>
+                <p id="mediaEstrelas">0 ★</p>
+            </div>
+        </div>
+        
+        <!-- Gráficos -->
+        <div class="charts">
+            <div class="chart-container">
+                <h3>Faixas Etárias</h3>
+                <canvas id="chartIdades"></canvas>
+            </div>
+            <div class="chart-container">
+                <h3>Feedbacks por Estrelas</h3>
+                <canvas id="chartFeedbacks"></canvas>
+            </div>
+        </div>
+
+        <!-- Últimos Feedbacks -->
+        <div class="card feedbacks">
+            <h2>Últimos Feedbacks</h2>
+            <ul id="listaFeedbacks"></ul>
+        </div>
+    </div>
+
+    <script src="js/dashboard.js"></script>
+</body>
+
+</html>
