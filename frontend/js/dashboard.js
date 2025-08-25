@@ -6,13 +6,9 @@ async function carregarDashboard() {
         if (!res.ok) throw new Error('Erro ao buscar estatísticas')
         const dados = await res.json()
 
-        // Total de participantes
+        // Cards
         document.getElementById('totalParticipantes').textContent = dados.totalParticipantes
-
-        // Total de feedbacks
         document.getElementById('totalFeedbacks').textContent = dados.totalFeedbacks || 0
-
-        // Média de estrelas
         document.getElementById('mediaEstrelas').textContent = (dados.mediaEstrelas || 0) + " ★"
 
         // Faixas etárias
@@ -27,12 +23,24 @@ async function carregarDashboard() {
                 datasets: [{
                     label: 'Participantes',
                     data: faixasData,
-                    backgroundColor: 'rgba(54, 162, 235, 0.6)'
+                    backgroundColor: 'rgba(54, 162, 235, 0.7)',
+                    borderRadius: 6
                 }]
             },
             options: {
                 responsive: true,
-                plugins: { legend: { display: false } }
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: true },
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            precision: 0
+                        }
+                    }
+                }
             }
         })
 
@@ -44,16 +52,23 @@ async function carregarDashboard() {
         chartFeedbacks = new Chart(ctxFeedbacks, {
             type: 'bar',
             data: {
-                labels: estrelasLabels,
+                labels: estrelasLabels.map(e => e + " ★"),
                 datasets: [{
                     label: 'Quantidade',
                     data: estrelasData,
-                    backgroundColor: 'rgba(255, 206, 86, 0.6)'
+                    backgroundColor: 'rgba(255, 206, 86, 0.7)',
+                    borderRadius: 6
                 }]
             },
             options: {
                 responsive: true,
-                plugins: { legend: { display: false } }
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: true },
+                },
+                scales: {
+                    y: { beginAtZero: true, ticks: { precision: 0 } }
+                }
             }
         })
 
@@ -62,11 +77,10 @@ async function carregarDashboard() {
         lista.innerHTML = ''
         dados.ultimosFeedbacks.forEach(f => {
             const li = document.createElement('li')
-            li.textContent = `${f.nome}: "${f.comentario}" (${f.estrelas} ★)`
+            li.innerHTML = `<strong>${f.nome}</strong>: "${f.comentario}" <span style="float:right">${f.estrelas} ★</span>`
             lista.appendChild(li)
         })
     } catch (err) {
-        // Exibe erro no dashboard
         document.getElementById('totalParticipantes').textContent = 'Erro'
         document.getElementById('totalFeedbacks').textContent = 'Erro'
         document.getElementById('mediaEstrelas').textContent = 'Erro'
@@ -75,6 +89,6 @@ async function carregarDashboard() {
     }
 }
 
-// Atualiza a cada 5s
+// Atualiza a cada 15s para dar mais fluidez
 carregarDashboard()
-setInterval(carregarDashboard, 10000)
+setInterval(carregarDashboard, 15000)
