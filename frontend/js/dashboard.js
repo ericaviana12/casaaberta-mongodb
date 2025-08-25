@@ -77,4 +77,4 @@ async function carregarDashboard() {
 
 // Atualiza a cada 5s
 carregarDashboard()
-setInterval(carregarDashboard, 5000)
+setInterval(carregarDashboard, 10000)
