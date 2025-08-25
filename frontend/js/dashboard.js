@@ -11,7 +11,7 @@ async function carregarDashboard() {
         document.getElementById('totalFeedbacks').textContent = dados.totalFeedbacks || 0
         document.getElementById('mediaEstrelas').textContent = (dados.mediaEstrelas || 0) + " ★"
 
-        // Faixas etárias
+        // Faixa etária dos participantes
         const ctxIdades = document.getElementById('chartIdades').getContext('2d')
         const faixasLabels = Object.keys(dados.faixasEtarias)
         const faixasData = Object.values(dados.faixasEtarias)
