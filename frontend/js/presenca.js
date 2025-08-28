@@ -62,42 +62,28 @@ function validarCPF(cpf) {
 // ===== Data de Nascimento =====
 const dataNascInput = document.getElementById('dataNascimento')
 
-// Verifica se é input text (desktop/totem) ou date (mobile)
-if (dataNascInput.type === 'text') {
-  // ===== Teclado virtual: máscara DD/MM/AAAA =====
-  dataNascInput.addEventListener('input', () => {
-    let value = dataNascInput.value.replace(/\D/g, '')
-    if (value.length > 8) value = value.slice(0, 8)
-    if (value.length >= 5) value = value.replace(/(\d{2})(\d{2})(\d{1,4})/, '$1/$2/$3')
-    else if (value.length >= 3) value = value.replace(/(\d{2})(\d{1,2})/, '$1/$2')
-    dataNascInput.value = value
-  })
+// ===== Máscara e validação DD/MM/AAAA =====
+dataNascInput.addEventListener('input', () => {
+  let value = dataNascInput.value.replace(/\D/g, '')
+  if (value.length > 8) value = value.slice(0, 8)
+  if (value.length >= 5) value = value.replace(/(\d{2})(\d{2})(\d{1,4})/, '$1/$2/$3')
+  else if (value.length >= 3) value = value.replace(/(\d{2})(\d{1,2})/, '$1/$2')
+  dataNascInput.value = value
+})
 
-  function validarData(dataStr) {
-    const partes = dataStr.split('/')
-    if (partes.length !== 3) return false
-    const [dia, mes, ano] = partes.map(Number)
-    const data = new Date(ano, mes - 1, dia)
-    const hoje = new Date()
-    if (data > hoje) return false
-    return data.getDate() === dia && data.getMonth() === mes - 1 && data.getFullYear() === ano
-  }
+function validarData(dataStr) {
+  const partes = dataStr.split('/')
+  if (partes.length !== 3) return false
+  const [dia, mes, ano] = partes.map(Number)
+  const data = new Date(ano, mes - 1, dia)
+  const hoje = new Date()
+  if (data > hoje) return false
+  return data.getDate() === dia && data.getMonth() === mes - 1 && data.getFullYear() === ano
+}
 
-  function converterDataParaISO(dataStr) {
-    const [dia, mes, ano] = dataStr.split('/').map(Number)
-    return `${ano.toString().padStart(4, '0')}-${mes.toString().padStart(2, '0')}-${dia.toString().padStart(2, '0')}`
-  }
-} else {
-  // ===== Mobile: input type="date" =====
-  function validarData(dataStr) {
-    const data = new Date(dataStr)
-    const hoje = new Date()
-    return data <= hoje
-  }
-
-  function converterDataParaISO(dataStr) {
-    return dataStr // já está em YYYY-MM-DD
-  }
+function converterDataParaISO(dataStr) {
+  const [dia, mes, ano] = dataStr.split('/').map(Number)
+  return `${ano.toString().padStart(4, '0')}-${mes.toString().padStart(2, '0')}-${dia.toString().padStart(2, '0')}`
 }
 
 // ===== E-mail =====
@@ -148,8 +134,8 @@ document.getElementById('form-presenca').addEventListener('submit', async functi
       dataNascInput.classList.add('is-invalid')
       mostrarMensagem('Data de nascimento inválida ou no futuro.', 'danger')
       temErro = true
-    } else if (dataNascInput.type === 'text') {
-      dataNascimento = converterDataParaISO(dataNascimento) // formata para envio
+    } else {
+      dataNascimento = converterDataParaISO(dataNascimento)
     }
   }
 
@@ -163,7 +149,7 @@ document.getElementById('form-presenca').addEventListener('submit', async functi
       mostrarMensagem('CPF inválido. Verifique e tente novamente.', 'danger')
       temErro = true
     } else {
-      cpf = cpfRaw // envia sem máscara
+      cpf = cpfRaw
     }
   }
 
@@ -207,7 +193,6 @@ document.getElementById('form-presenca').addEventListener('submit', async functi
       mostrarMensagem(conteudo.message || 'Presença registrada com sucesso!', 'success')
       this.reset()
     } else {
-      // CPF duplicado
       if (conteudo.error && conteudo.error.toLowerCase().includes('cpf')) {
         cpfInput.classList.add('is-invalid')
         cpfInput.value = ''
