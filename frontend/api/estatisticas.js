@@ -18,9 +18,22 @@ export default async function handler(req, res) {
         try {
             const totalParticipantes = await db.collection('presencas').countDocuments()
             const participantes = await db.collection('presencas').find().toArray()
+
+            // Inicializa faixas etárias
             const faixas = { 'Menores de 18': 0, '18-25': 0, '26-35': 0, '36-50': 0, '50+': 0 }
+
             participantes.forEach(p => {
-                const idade = new Date().getFullYear() - new Date(p.dataNascimento).getFullYear()
+                const dataNasc = p.dataNascimento
+                if (!dataNasc || dataNasc === "ND") return // ignora registros sem data
+
+                const nascimento = new Date(dataNasc)
+                const hoje = new Date()
+                let idade = hoje.getFullYear() - nascimento.getFullYear()
+                const m = hoje.getMonth() - nascimento.getMonth()
+                if (m < 0 || (m === 0 && hoje.getDate() < nascimento.getDate())) {
+                    idade--
+                }
+
                 if (idade < 18) faixas['Menores de 18']++
                 else if (idade <= 25) faixas['18-25']++
                 else if (idade <= 35) faixas['26-35']++
@@ -28,6 +41,7 @@ export default async function handler(req, res) {
                 else faixas['50+']++
             })
 
+            // Feedbacks
             const feedbacks = await db.collection('feedbacks').find().sort({ criadoEm: -1 }).limit(10).toArray()
             const distEstrelas = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 }
             let somaEstrelas = 0
@@ -52,6 +66,7 @@ export default async function handler(req, res) {
                 ultimosFeedbacks: feedbacks
             })
         } catch (err) {
+            console.error(err)
             res.status(500).json({ error: 'Erro ao buscar estatísticas.' })
         }
     } else {
