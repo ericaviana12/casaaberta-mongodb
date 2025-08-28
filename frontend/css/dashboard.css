@@ -144,6 +144,14 @@ h1 {
     transform: translateX(4px);
 }
 
+/* Estilo do rodapé centralizado */
+footer {
+    text-align: center;
+    padding: 15px;
+    color: #666;
+    font-size: 0.9rem;
+}
+
 /* ========= RESPONSIVIDADE ========= */
 @media (max-width: 900px) {
 

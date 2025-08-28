@@ -11,12 +11,12 @@ cpfInput.addEventListener('input', () => {
   cpfInput.value = value
 })
 
-// Checagem de CPF duplicado ao perder o foco
+// Checagem de CPF duplicado ao perder o foco (somente se digitado)
 cpfInput.addEventListener('blur', async () => {
-  const cpf = cpfInput.value.replace(/\D/g, '')
-  if (validarCPF(cpf)) {
+  const cpfRaw = cpfInput.value.replace(/\D/g, '')
+  if (cpfRaw && validarCPF(cpfRaw)) {
     try {
-      const resposta = await fetch(`${API_BASE_URL}/cpf?cpf=${cpf}`)
+      const resposta = await fetch(`${API_BASE_URL}/cpf?cpf=${cpfRaw}`)
       const existe = await resposta.json()
       if (existe.cadastrado) {
         cpfInput.classList.add('is-invalid')
@@ -105,17 +105,18 @@ document.getElementById('form-presenca').addEventListener('submit', async functi
   limparMensagem()
 
   const nome = nomeInput.value.trim()
-  const dataNascimento = dataNascInput.value
-  const cpf = cpfInput.value.trim()
+  let dataNascimento = dataNascInput.value
+  let cpf = cpfInput.value.trim()
   const email = emailInput.value.trim()
 
   let temErro = false
 
+  // Validação nome
   if (!nome) { nomeInput.classList.add('is-invalid'); temErro = true }
+
+  // Validação data nascimento (opcional)
   if (!dataNascimento) {
-    dataNascInput.classList.add('is-invalid')
-    mostrarMensagem('Por favor, informe uma data de nascimento válida.', 'danger')
-    temErro = true
+    dataNascimento = "ND"
   } else {
     const hoje = new Date()
     const nascimento = new Date(dataNascimento)
@@ -126,12 +127,21 @@ document.getElementById('form-presenca').addEventListener('submit', async functi
     }
   }
 
-  if (!validarCPF(cpf)) {
-    cpfInput.classList.add('is-invalid')
-    mostrarMensagem('CPF inválido. Verifique e tente novamente.', 'danger')
-    temErro = true
+  // Validação CPF (opcional)
+  if (!cpf) {
+    cpf = "ND"
+  } else {
+    const cpfRaw = cpf.replace(/\D/g, '')
+    if (!validarCPF(cpfRaw)) {
+      cpfInput.classList.add('is-invalid')
+      mostrarMensagem('CPF inválido. Verifique e tente novamente.', 'danger')
+      temErro = true
+    } else {
+      cpf = cpfRaw // envia sem máscara
+    }
   }
 
+  // Validação e-mail
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
   if (!email || !emailRegex.test(email)) {
     emailInput.classList.add('is-invalid')
@@ -140,9 +150,9 @@ document.getElementById('form-presenca').addEventListener('submit', async functi
   }
 
   // Checagem extra de CPF duplicado antes de enviar
-  if (!temErro && validarCPF(cpf)) {
+  if (!temErro && cpf !== "ND" && validarCPF(cpf)) {
     try {
-      const resposta = await fetch(`${API_BASE_URL}/cpf?cpf=${cpf.replace(/\D/g, '')}`)
+      const resposta = await fetch(`${API_BASE_URL}/cpf?cpf=${cpf}`)
       const existe = await resposta.json()
       if (existe.cadastrado) {
         cpfInput.classList.add('is-invalid')
