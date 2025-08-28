@@ -61,18 +61,44 @@ function validarCPF(cpf) {
 
 // ===== Data de Nascimento =====
 const dataNascInput = document.getElementById('dataNascimento')
-dataNascInput.addEventListener('change', () => {
-  const hoje = new Date()
-  const nascimento = new Date(dataNascInput.value)
-  if (nascimento > hoje) {
-    dataNascInput.classList.add('is-invalid')
-    mostrarMensagem('Data de nascimento não pode ser no futuro.', 'danger')
-    dataNascInput.value = ''
-  } else {
-    dataNascInput.classList.remove('is-invalid')
-    limparMensagem()
+
+// Verifica se é input text (desktop/totem) ou date (mobile)
+if (dataNascInput.type === 'text') {
+  // ===== Teclado virtual: máscara DD/MM/AAAA =====
+  dataNascInput.addEventListener('input', () => {
+    let value = dataNascInput.value.replace(/\D/g, '')
+    if (value.length > 8) value = value.slice(0, 8)
+    if (value.length >= 5) value = value.replace(/(\d{2})(\d{2})(\d{1,4})/, '$1/$2/$3')
+    else if (value.length >= 3) value = value.replace(/(\d{2})(\d{1,2})/, '$1/$2')
+    dataNascInput.value = value
+  })
+
+  function validarData(dataStr) {
+    const partes = dataStr.split('/')
+    if (partes.length !== 3) return false
+    const [dia, mes, ano] = partes.map(Number)
+    const data = new Date(ano, mes - 1, dia)
+    const hoje = new Date()
+    if (data > hoje) return false
+    return data.getDate() === dia && data.getMonth() === mes - 1 && data.getFullYear() === ano
   }
-})
+
+  function converterDataParaISO(dataStr) {
+    const [dia, mes, ano] = dataStr.split('/').map(Number)
+    return `${ano.toString().padStart(4, '0')}-${mes.toString().padStart(2, '0')}-${dia.toString().padStart(2, '0')}`
+  }
+} else {
+  // ===== Mobile: input type="date" =====
+  function validarData(dataStr) {
+    const data = new Date(dataStr)
+    const hoje = new Date()
+    return data <= hoje
+  }
+
+  function converterDataParaISO(dataStr) {
+    return dataStr // já está em YYYY-MM-DD
+  }
+}
 
 // ===== E-mail =====
 const emailInput = document.getElementById('email')
@@ -118,12 +144,12 @@ document.getElementById('form-presenca').addEventListener('submit', async functi
   if (!dataNascimento) {
     dataNascimento = "ND"
   } else {
-    const hoje = new Date()
-    const nascimento = new Date(dataNascimento)
-    if (nascimento > hoje) {
+    if (!validarData(dataNascimento)) {
       dataNascInput.classList.add('is-invalid')
-      mostrarMensagem('Data de nascimento não pode ser no futuro.', 'danger')
+      mostrarMensagem('Data de nascimento inválida ou no futuro.', 'danger')
       temErro = true
+    } else if (dataNascInput.type === 'text') {
+      dataNascimento = converterDataParaISO(dataNascimento) // formata para envio
     }
   }
 
