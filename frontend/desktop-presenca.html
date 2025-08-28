@@ -22,7 +22,8 @@
     </div>
 
     <div class="row justify-content-center">
-      <div class="col-md-8 col-lg-6">
+      <!-- Para desktop, aumenta a largura da coluna -->
+      <div class="col-lg-5 col-xl-4">
         <div class="card shadow rounded-4">
           <div class="card-body">
             <form id="form-presenca" novalidate>
@@ -34,12 +35,12 @@
 
               <div class="mb-3">
                 <label for="dataNascimento" class="form-label">Data de nascimento</label>
-                <input type="date" class="form-control" id="dataNascimento" name="dataNascimento" required />
+                <input type="date" class="form-control" id="dataNascimento" name="dataNascimento" />
               </div>
 
               <div class="mb-3">
                 <label for="cpf" class="form-label">CPF</label>
-                <input type="text" class="form-control" id="cpf" name="cpf" placeholder="Ex: 000.000.000-00" required
+                <input type="text" class="form-control" id="cpf" name="cpf" placeholder="Ex: 000.000.000-00"
                   maxlength="14" />
               </div>
 
@@ -62,7 +63,6 @@
 
     <div class="teclado-container">
       <div class="teclado">
-
         <!-- Linha 0 - Números -->
         <div class="tecla" onclick="inserirCaractere('1')">1</div>
         <div class="tecla" onclick="inserirCaractere('2')">2</div>
@@ -115,7 +115,6 @@
         <div class="tecla" onclick="inserirCaractere('.')">.</div>
         <div class="tecla extra-wide" onclick="inserirCaractere(' ')">Espaço</div>
       </div>
-
     </div>
 
     <footer class="mt-5 py-3 border-top text-center text-muted small">
