@@ -38,11 +38,9 @@ function validarCPF(cpf) {
   if (/^(\d)\1{10}$/.test(cpf)) return false
 
   let soma = 0, resto
-
   for (let i = 1; i <= 9; i++) {
     soma += parseInt(cpf.substring(i - 1, i)) * (11 - i)
   }
-
   resto = (soma * 10) % 11
   if (resto === 10 || resto === 11) resto = 0
   if (resto !== parseInt(cpf.substring(9, 10))) return false
@@ -51,7 +49,6 @@ function validarCPF(cpf) {
   for (let i = 1; i <= 10; i++) {
     soma += parseInt(cpf.substring(i - 1, i)) * (12 - i)
   }
-
   resto = (soma * 10) % 11
   if (resto === 10 || resto === 11) resto = 0
   if (resto !== parseInt(cpf.substring(10, 11))) return false
@@ -103,6 +100,64 @@ function limparMensagem() {
   mensagemEl.classList.remove('text-danger', 'text-success')
 }
 
+// ===== Teclado virtual =====
+let campoFocado = null
+let capsLockAtivo = false
+
+document.querySelectorAll("input[type='text'], input[type='email'], textarea").forEach(campo => {
+  campo.addEventListener('focus', () => { campoFocado = campo })
+})
+
+function toggleCapsLock() {
+  capsLockAtivo = !capsLockAtivo
+  document.querySelectorAll('.tecla.letra').forEach(tecla => {
+    tecla.textContent = capsLockAtivo
+      ? tecla.dataset.char.toUpperCase()
+      : tecla.dataset.char.toLowerCase()
+  })
+  const capsBtn = document.getElementById('capsLock')
+  capsLockAtivo ? capsBtn.classList.add('ativo') : capsBtn.classList.remove('ativo')
+}
+
+function inserirCaractere(char) {
+  if (campoFocado) {
+    let caractereFinal = capsLockAtivo ? char.toUpperCase() : char
+    let inicio = campoFocado.selectionStart
+    let fim = campoFocado.selectionEnd
+    let texto = campoFocado.value
+
+    texto = texto.substring(0, inicio) + caractereFinal + texto.substring(fim)
+
+    // Máscara automática para campo de data
+    if (campoFocado.id === 'dataNascimento') {
+      let numeros = texto.replace(/\D/g, '').slice(0, 8)
+      if (numeros.length >= 5) numeros = numeros.replace(/(\d{2})(\d{2})(\d{1,4})/, '$1/$2/$3')
+      else if (numeros.length >= 3) numeros = numeros.replace(/(\d{2})(\d{1,2})/, '$1/$2')
+      texto = numeros
+    }
+
+    campoFocado.value = texto
+    campoFocado.setSelectionRange(texto.length, texto.length)
+    campoFocado.focus()
+  }
+}
+
+function backspace() {
+  if (campoFocado) {
+    const inicio = campoFocado.selectionStart
+    const fim = campoFocado.selectionEnd
+    const texto = campoFocado.value
+    if (inicio === fim && inicio > 0) {
+      campoFocado.value = texto.substring(0, inicio - 1) + texto.substring(fim)
+      campoFocado.setSelectionRange(inicio - 1, inicio - 1)
+    } else {
+      campoFocado.value = texto.substring(0, inicio) + texto.substring(fim)
+      campoFocado.setSelectionRange(inicio, inicio)
+    }
+    campoFocado.focus()
+  }
+}
+
 // ===== Formulário =====
 document.getElementById('form-presenca').addEventListener('submit', async function (e) {
   e.preventDefault()
@@ -126,7 +181,7 @@ document.getElementById('form-presenca').addEventListener('submit', async functi
   // Validação nome
   if (!nome) { nomeInput.classList.add('is-invalid'); temErro = true }
 
-  // Validação data nascimento (opcional)
+  // Validação data nascimento
   if (!dataNascimento) {
     dataNascimento = "ND"
   } else {
@@ -139,7 +194,7 @@ document.getElementById('form-presenca').addEventListener('submit', async functi
     }
   }
 
-  // Validação CPF (opcional)
+  // Validação CPF
   if (!cpf) {
     cpf = "ND"
   } else {
@@ -161,7 +216,7 @@ document.getElementById('form-presenca').addEventListener('submit', async functi
     temErro = true
   }
 
-  // Checagem extra de CPF duplicado antes de enviar
+  // Checagem extra de CPF duplicado
   if (!temErro && cpf !== "ND" && validarCPF(cpf)) {
     try {
       const resposta = await fetch(`${API_BASE_URL}/cpf?cpf=${cpf}`)
@@ -171,9 +226,7 @@ document.getElementById('form-presenca').addEventListener('submit', async functi
         mostrarMensagem('CPF já cadastrado.', 'danger')
         temErro = true
       }
-    } catch (erro) {
-      // Ignora erro de conexão
-    }
+    } catch (erro) { }
   }
 
   if (temErro) return
